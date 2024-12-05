@@ -9,11 +9,13 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   mov si, message
   call .print_string
 
+; Resets the fixed disk controller and driver
+; It forces recalibration of the read/write head
 .Reset:
   mov ah, 0             ; reset drive command
   mov dl, [BootDrive]   ; drive number (refer to line 7)
-  int 0x13              ; BIOS drive interrupt
-  jc .Reset
+  int 0x13              ; BIOS drive interrupt (refer to documentation)
+  jc .Reset             ; CF is set on error, we can just try again
 
   mov ax, 0x1000        ; load stage 2 at segment 0x1000
   mov es, ax
@@ -26,13 +28,15 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   mov dh, 0             ; head number
   mov dl, [BootDrive]   ; drive number
   int 0x13              ; BIOS drive interrupt
-  jc .DiskError         ; In case of error when reading from drive
+  jc .DiskError         ; CF will be set in case of error when reading from drive
 
   mov si, jump_msg
   call .print_string
 
   jmp 0x1000:0x0        ; Execute stage 2
 
+; In case of disk error we just print an error message and loop forever
+; At least for now. probably should have more robust error handling :)
 .DiskError:
   mov si, disk_error_msg
   call .print_string
@@ -57,6 +61,7 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
     int 0x10
     ret
 
+; String messages and variables
 message db 'Loading Stage 2 Bootloader', 0
 jump_msg db 'Jumping to stage 2', 0
 disk_error_msg db 'Disk read error!', 0
