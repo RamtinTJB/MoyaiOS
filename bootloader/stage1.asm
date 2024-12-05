@@ -42,24 +42,7 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   call .print_string
   jmp $
 
-.print_string:
-  .next_char:
-    lodsb
-    cmp al, 0
-    je .done
-    mov ah, 0x0E
-    int 0x10
-    jmp .next_char
-  .done:                 ; prints new line and returns from the routine
-    ; print carriage return (\r)
-    mov al, 0x0D
-    mov ah, 0x0E
-    int 0x10
-    ; print line feed (\n)
-    mov al, 0x0A
-    mov ah, 0x0E
-    int 0x10
-    ret
+%include "utils.asm"    ; .print_string routine is defined here
 
 ; String messages and variables
 message db 'Loading Stage 2 Bootloader', 0
