@@ -15,7 +15,9 @@ $(DISK_IMG): bootloader
 	dd if=$(STAGE2_BIN) of=$(DISK_IMG) bs=512 seek=1 conv=notrunc
 
 run:
-	$(QEMU) -debugcon stdio -fda $(DISK_IMG)
+	$(QEMU) \
+		-debugcon stdio \
+		-drive format=raw,if=floppy,file=$(DISK_IMG)
 
 clean:
 	$(MAKE) -C $(BOOTLOADER_DIR) clean
