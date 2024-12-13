@@ -1,14 +1,16 @@
-bits 16
+bits 16               ; We are still in real mode when we install GDT
+                      ; Need to set up GDT before activating protected mode
 
 setup_GDT:
-  cli
+  cli                 ; Disable interrupts
   pusha
   lgdt  [toc]         ; Loads the GDTR register. This register holds the size and
                       ; the address of the Global Descriptor Table
                       ; In 32-bit mode, the first 16 bits (0-15) are the size
                       ; and the next 16 bits (16-31) are the offset
                       ; Look at the declaration of [toc] below
-  sti
+  
+  sti                 ; Re-enable interrupts
   popa
   ret
 
