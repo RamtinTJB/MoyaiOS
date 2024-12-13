@@ -1,9 +1,24 @@
-org 0x7c00              ; BIOS loads the bootloader at address 0x0000:0x7c00
+org           0         ; BIOS loads the bootloader at address 0x0000:0x7c00
+                        ; We'll load the address into segment registers later later
 
 bits 16                 ; When system starts, it's in real mode (16-bit) so the
                         ; first stage bootloader has to be compiled in this mode
 
 .start:
+  cli                   ; Disable interrupts
+  mov ax, 0x07C0        ; The address to which the bootloader is loaded
+                        ; Refer to the comment at the top of file
+
+  mov ds, ax            ; Data Segment
+  mov es, ax            ; Extra Segment
+  mov fs, ax        
+  mov gs, ax
+
+  mov ax, 0x0000        ; Setup the stack pointer
+  mov ss, ax            ; Stack Segment
+  mov sp, 0xFFFF        ; Stack Pointer (at the end of the segment since it grows down) 0x0000:0xFFFF
+  sti                   ; Re-enable interrupts
+
   mov [BootDrive], dl   ; store the disk number we booted from
                         ; usually 0 for floppy, 0x80 for hard drive
   mov si, message
@@ -17,9 +32,9 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   int 0x13              ; BIOS drive interrupt (refer to documentation)
   jc .Reset             ; CF is set on error, we can just try again
 
-  mov ax, 0x1000        ; load stage 2 at segment 0x1000
+  mov ax, 0x0050        ; load stage 2 at segment 0x0050
   mov es, ax
-  xor bx, bx            ; offset 0 -> 0x1000:0000
+  xor bx, bx            ; offset 0 -> 0x0050:0000
 
   mov ah, 0x02          ; read from drive command
   mov al, 1             ; number of sectors to read (1 for now)
@@ -33,7 +48,10 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   mov si, jump_msg
   call .print_string
 
-  jmp 0x1000:0x0        ; Execute stage 2
+  push WORD 0x0050
+  push WORD 0x0000
+  retf                   ; Far return to the address that's on the stack: 0x0050:0x0000
+                         ; This will jump to Stage 2
 
 ; In case of disk error we just print an error message and loop forever
 ; At least for now. probably should have more robust error handling :)
