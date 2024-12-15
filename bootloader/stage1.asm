@@ -22,7 +22,7 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   mov [BootDrive], dl   ; store the disk number we booted from
                         ; usually 0 for floppy, 0x80 for hard drive
   mov si, message
-  call .print_string
+  call print_string
 
 ; Resets the fixed disk controller and driver
 ; It forces recalibration of the read/write head
@@ -46,7 +46,7 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
   jc .DiskError         ; CF will be set in case of error when reading from drive
 
   mov si, jump_msg
-  call .print_string
+  call print_string
 
   push WORD 0x0050
   push WORD 0x0000
@@ -57,7 +57,7 @@ bits 16                 ; When system starts, it's in real mode (16-bit) so the
 ; At least for now. probably should have more robust error handling :)
 .DiskError:
   mov si, disk_error_msg
-  call .print_string
+  call print_string
   jmp $
 
 %include "utils.asm"    ; .print_string routine is defined here

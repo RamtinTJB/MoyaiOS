@@ -18,13 +18,32 @@ start:
   sti
 
   mov si, message
-  call .print_string
+  call print_string
 
   call setup_GDT        ; Setup the GDT
                         ; The function is located in gdt.asm and it uses the lgdt instruction
 
   call EnableA20        ; Enable A20 address line (defined in a20.asm)
 
+  mov ax, 0x9000
+  mov es, ax
+  xor bx, bx
+  mov ah, 0x02
+  mov al, 1             ; Number of sectors that the kernel occupy (adjust over time)
+  mov ch, 0
+  mov cl, 4             ; Starts from sector 4
+  mov dh, 0
+  mov dl, 0
+  int 0x13
+  jc .disk_error
+  jmp enter_protected_mode
+
+.disk_error:
+  mov si, disk_error_msg
+  call print_string
+  jmp $
+
+enter_protected_mode:
   cli                   ; Disable interrupts before entering protected mode
                         ; We don't have access to any of the BIOS interrupts in protected mode
                         ; So if an interrupt happens in protected mode, the system will triple fault
@@ -58,12 +77,15 @@ Stage3:
   mov esi, debug_message_pm
   call write_debug_pm
 
-  %define VIDMEM 0xB8000
-  mov edi, VIDMEM
-  mov [edi], byte 'A'
-  mov [edi+1], byte 0x8
+  mov esi, 0x90000
+  mov edi, 0x100000
+  mov ecx, 512 * 1 / 4    ; Number of sectors that kernel occupies
+  rep movsd               ; Copy kernel from 0x30000 to 1MB address
+
+  call CODE_DESC:0x100000 ; Jump to the loaded C Kernel
 
   cli
   hlt                   ; Halt the system
 
-debug_message_pm db 'Entered Protected Mode!', 0
+debug_message_pm db 'Entered Protected Mode!', 0x0D, 0x0A 0
+disk_error_msg db 'Error reading from disk', 0x0D, 0x0A, 0

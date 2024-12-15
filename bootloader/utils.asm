@@ -3,7 +3,7 @@ bits 16
 ; Routine to print strings using 0x10 BIOS interrupt
 ; Inputs:
 ;     - si: string to print (has to be 0-terminated)
-.print_string:
+print_string:
   pusha                 ; Push all general purpose registers to stack (ax, cx, dx, bx, sp, bp, si, di)
   .next_char:
     lodsb
