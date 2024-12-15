@@ -1,4 +1,5 @@
 #include "vga.hpp"
+#include "debug.hpp"
 
 extern "C" void kernel_main() {
   asm volatile (
@@ -15,8 +16,9 @@ extern "C" void kernel_main() {
     );
 
   terminal_init();
-  char* str = "Moyai OS";
+  const char* str = "Moyai OS";
   terminal_write(str, 8);
+  debug_write_string("Debug console from the C++ Kernel!\n");
 
   while (1) {}
 }
