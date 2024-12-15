@@ -87,5 +87,5 @@ Stage3:
   cli
   hlt                   ; Halt the system
 
-debug_message_pm db 'Entered Protected Mode!', 0x0D, 0x0A 0
+debug_message_pm db 'Entered Protected Mode!', 0x0D, 0x0A, 0
 disk_error_msg db 'Error reading from disk', 0x0D, 0x0A, 0
