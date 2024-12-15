@@ -33,7 +33,7 @@ start:
   mov ch, 0
   mov cl, 4             ; Starts from sector 4
   mov dh, 0
-  mov dl, 0
+  mov dl, 0x80
   int 0x13
   jc .disk_error
   jmp enter_protected_mode
