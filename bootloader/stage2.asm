@@ -5,6 +5,7 @@ org 0x500               ; stage 2 is loaded at 0x0050:0000 (so linear address is
 jmp start               ; Jump past the gdt stuff to the start of stage 2
 
 %include "gdt.asm"      ; The Global Descriptor Table
+%include "a20.asm"
 
 start:
   cli                   ; Disable interrupts 
@@ -21,6 +22,8 @@ start:
 
   call setup_GDT        ; Setup the GDT
                         ; The function is located in gdt.asm and it uses the lgdt instruction
+
+  call EnableA20        ; Enable A20 address line (defined in a20.asm)
 
   cli                   ; Disable interrupts before entering protected mode
                         ; We don't have access to any of the BIOS interrupts in protected mode
@@ -54,6 +57,11 @@ Stage3:
 
   mov esi, debug_message_pm
   call write_debug_pm
+
+  %define VIDMEM 0xB8000
+  mov edi, VIDMEM
+  mov [edi], byte 'A'
+  mov [edi+1], byte 0x8
 
   cli
   hlt                   ; Halt the system
