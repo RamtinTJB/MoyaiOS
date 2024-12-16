@@ -18,8 +18,9 @@ extern "C" void kernel_main() {
 
   terminal_init();
   const char* str = "Moyai OS";
-  terminal_write(str, strlen_(str));
+  terminal_write(str, strlen(str));
   debug_write_string("Debug console from the C++ Kernel!\n");
+  debug_printf("Welcome to %s, %d, %x\n", "Moyai OS", 100, str);
 
   while (1) {}
 }
