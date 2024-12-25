@@ -24,3 +24,11 @@ void reverse(char* str) {
     }
   }
 }
+
+void *memset(void *dest, int val, size_t count) {
+  unsigned char *ptr = (unsigned char*) dest;
+  while (count--) {
+    *ptr++ = (unsigned char)val;
+  }
+  return dest;
+}

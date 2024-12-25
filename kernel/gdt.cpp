@@ -1,4 +1,5 @@
 #include "gdt.hpp"
+#include <string.hpp>
 
 struct gdtr {
   uint16_t m_limit;   // Size of the GDT
@@ -16,7 +17,7 @@ void gdt_set_descriptor(uint32_t i, uint64_t base, uint64_t limit, uint8_t acces
   if (i > MAX_DESCRIPTORS)
     return;
 
-  // MEMSET here
+  memset((void*)&_gdt[i], 0, sizeof(gdt_entry));
   
   _gdt[i].baseLo  = uint16_t(base & 0xffff);
   _gdt[i].baseMid = uint8_t((base >> 16) & 0xff);
@@ -44,7 +45,7 @@ int gdt_init() {
 
   // Code Descriptor
   gdt_set_descriptor(1, 0, 0xffffffff,
-      GDT_DESC_READ_WRITE | GDT_DESC_CODE_DATA | GDT_DESC_MEMORY,
+      GDT_DESC_READ_WRITE | GDT_DESC_EXEC_CODE | GDT_DESC_CODE_DATA | GDT_DESC_MEMORY,
       GDT_GRAN_4K | GDT_GRAN_32BIT | GDT_GRAN_LIMITHI_MASK);
 
   // Data Descriptor

@@ -5,5 +5,6 @@
 
 size_t strlen(const char* str);
 void reverse(char* str);
+void *memset(void *dest, int val, size_t count);
 
 #endif
