@@ -24,6 +24,12 @@ $(DISK_IMG): bootloader kernel
 run:
 	$(QEMU) \
 		-debugcon stdio \
+		-drive format=raw,if=floppy,file=$(DISK_IMG)
+
+debug:
+	$(QEMU) \
+		-s -S \
+		-debugcon stdio \
 		-drive format=raw,if=ide,file=$(DISK_IMG)
 
 clean:

@@ -29,11 +29,11 @@ start:
   mov es, ax
   xor bx, bx
   mov ah, 0x02
-  mov al, 17             ; Number of sectors that the kernel occupy (adjust over time)
+  mov al, 41             ; Number of sectors that the kernel occupy (adjust over time)
   mov ch, 0
   mov cl, 4             ; Starts from sector 4
   mov dh, 0
-  mov dl, 0x80
+  mov dl, 0x00
   int 0x13
   jc .disk_error
   jmp enter_protected_mode
@@ -79,7 +79,7 @@ Stage3:
 
   mov esi, 0x90000
   mov edi, 0x100000
-  mov ecx, 512 * 17 / 4    ; Number of sectors that kernel occupies
+  mov ecx, 512 * 41 / 4    ; Number of sectors that kernel occupies
   rep movsd               ; Copy kernel from 0x30000 to 1MB address
 
   call CODE_DESC:0x100000 ; Jump to the loaded C Kernel
