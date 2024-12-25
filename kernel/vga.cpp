@@ -20,12 +20,12 @@ static const size_t HEIGHT = 25;
 void terminal_init(void) {
   term_row = 0;
   term_col = 0;
-  term_color = vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_LIGHT_GREY);
+  term_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
   for (size_t y = 0; y < HEIGHT; ++y) {
     for (size_t x = 0; x < WIDTH; ++x) {
       const size_t index = y*WIDTH + x;
-      video_memory[index] = vga_entry(' ', term_col);
+      video_memory[index] = vga_entry(' ', term_color);
     }
   }
 }
