@@ -1,4 +1,5 @@
 #include "vga.hpp"
+#include "gdt.hpp"
 #include <debug.hpp>
 #include <string.hpp>
 
@@ -15,6 +16,8 @@ extern "C" void kernel_main() {
         : "ax"
 
     );
+
+  gdt_init();
 
   terminal_init();
   const char* str = "Moyai OS";
