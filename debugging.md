@@ -29,7 +29,13 @@ call .write_debug
 debug_message db 'Testing QEMU Debug', 0
 ```
 
-TODO: Add instructions on how to use this in C/C++ kernel
+We can utilize the same functionality in the kernel as well to print debugging messages to Qemu's console. All the functions are in the `<debug.hpp>` header file. The following function are available:
+
+```cpp
+void debug_write_char(char c);
+void debug_write_string(const char* str);
+void debug_printf(const char* format, ...);
+```
 
 ### Connecting GDB to QEMU
 
