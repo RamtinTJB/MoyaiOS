@@ -6,10 +6,19 @@ struct gdtr {
   uint32_t m_base;    // Base address of GDT
 } __attribute__((packed));
 
+/*
+A quick note on __attribute__((packed)):
+  The compiler might sometimes decide to pad between the fields in a
+  structure. with this modifier, we are telling the compiler not to do that
+  This is important because gdtr is gonna be directly stored in a register
+  and the bits have to precise
+*/
+
 static struct gdt_entry  _gdt[MAX_DESCRIPTORS];
 static struct gdtr       _gdtr;
 
 static void gdt_install() {
+  // lgdt [_gdtr]
   asm volatile ("lgdt (%0)" :: "r"(&_gdtr));
 }
 
@@ -17,6 +26,7 @@ void gdt_set_descriptor(uint32_t i, uint64_t base, uint64_t limit, uint8_t acces
   if (i > MAX_DESCRIPTORS)
     return;
 
+  // Zero out the entry before setting it
   memset((void*)&_gdt[i], 0, sizeof(gdt_entry));
   
   _gdt[i].baseLo  = uint16_t(base & 0xffff);
