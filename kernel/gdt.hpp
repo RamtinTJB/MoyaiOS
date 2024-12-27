@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+// ================== GDT Descriptor Flags ==================
+
 // The maximum number of descriptors allowed: null, code, data
 #define MAX_DESCRIPTORS                     3
 
@@ -29,6 +31,7 @@
 #define GDT_DESC_MEMORY                     0x0080
 
 
+// ================== GDT Granularity Flags ==================
 
 // High 4 bits of the limit
 #define GDT_GRAN_LIMITHI_MASK               0x0f
@@ -42,6 +45,8 @@
 // 4k granularity for the limit, the default is 1 byte
 #define GDT_GRAN_4K                         0x80
 
+// // ================== GDT Entry Structure ==================
+
 struct gdt_entry {
   uint16_t limit;     // Bits 0-15 of segment limit
   uint16_t baseLo;    // Bits 0-15 of base address
@@ -51,8 +56,10 @@ struct gdt_entry {
   uint8_t  baseHi;    // bits 24-32 of base address
 } __attribute__((packed));
 
+// ================== GDT Functions ==================
+
 void gdt_set_descriptor(uint32_t i, uint64_t base, uint64_t limit, uint8_t access, uint8_t gran);
 gdt_entry *gdt_get_descriptor(int i);
 int gdt_init();
 
-#endif
+#endif // MOYAIOS_GDT_HPP_
