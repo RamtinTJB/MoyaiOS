@@ -11,6 +11,7 @@ static struct idt_entry _idt[MAX_INTERRUPTS];
 static struct idtr      _idtr;
 
 static void idt_install() {
+  // lidt [_idtr]
   asm volatile ("lidt (%0)" :: "r"(&_idtr));
 }
 
@@ -48,6 +49,7 @@ int idt_init(uint16_t codeSel) {
   _idtr.limit = sizeof (struct idt_entry) * MAX_INTERRUPTS - 1;
   _idtr.base  = (uint32_t)&_idt[0];
 
+  // zero out the idt table before populating
   memset((void*)&_idt[0], 0, sizeof(idt_entry) * MAX_INTERRUPTS - 1);
 
   for (int i = 0; i < MAX_INTERRUPTS; ++i) {
