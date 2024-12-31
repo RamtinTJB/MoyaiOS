@@ -4,7 +4,7 @@ CFLAGS := -ffreestanding -m32 -nostdlib -g -Ilib
 LDFLAGS := -m elf_i386 -T linker.ld --oformat binary
 LIB := lib/libmoyai.a
 LIB_DIR := lib
-SRC := kernel.cpp vga.cpp gdt.cpp idt.cpp hw_interface.cpp
+SRC := kernel.cpp vga.cpp gdt.cpp idt.cpp hw_interface.cpp exceptions.cpp
 OBJ := $(SRC:.cpp=.o)
 BIN := kernel.bin
 

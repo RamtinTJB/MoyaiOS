@@ -1,6 +1,7 @@
 #include "vga.hpp"
 #include "gdt.hpp"
 #include "idt.hpp"
+#include "exceptions.hpp"
 #include <debug.hpp>
 #include <string.hpp>
 
@@ -20,6 +21,7 @@ extern "C" void kernel_main() {
 
   gdt_init();
   idt_init(0x8);
+  exceptions_init();
 
   terminal_init();
   const char* str = "Moyai OS";
@@ -27,7 +29,9 @@ extern "C" void kernel_main() {
   debug_write_string("Debug console from the C++ Kernel!\n");
   debug_printf("Welcome to %s, %d, %x\n", "Moyai OS", 100, str);
 
-  gen_int(0x11);
+  trigger_divide_by_zero();
+
+  //gen_int(0x11);
 
   while (1) {}
 }

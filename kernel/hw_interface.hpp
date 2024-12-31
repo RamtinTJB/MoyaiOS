@@ -2,6 +2,7 @@
 #define MOYAIOS_HW_INTERFACE_
 
 #include <stdint.h>
+#include "idt.hpp"
 
 void hardware_interface_init();
 
@@ -13,5 +14,7 @@ void disable();
 
 void outb(uint16_t portid, uint8_t value);
 uint8_t inb(uint16_t portid);
+
+void set_int_vect(int intno, I86_IRQ_HANDLER);
 
 #endif
