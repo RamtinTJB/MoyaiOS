@@ -3,7 +3,7 @@
 #include "hw_interface.hpp"
 
 void kernel_panic(const char* msg) {
-  debug_printf("*** STOP: %s\n", msg);
+  debug_printf("*[Kernel Panic]* : %s\n", msg);
 }
 
 void divide_by_zero_fault(uint32_t cs, uint32_t eip, uint32_t eflags) {

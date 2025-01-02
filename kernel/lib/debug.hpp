@@ -8,4 +8,6 @@ void debug_write_char(char c);
 void debug_write_string(const char* str);
 void debug_printf(const char* format, ...);
 
+void infinite_loop();
+
 #endif

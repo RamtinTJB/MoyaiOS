@@ -102,3 +102,7 @@ void debug_printf(const char* format, ...) {
 
     va_end(args);
 }
+
+void infinite_loop() {
+    asm volatile ("1: hlt; jmp 1b");
+}
