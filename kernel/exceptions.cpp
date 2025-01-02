@@ -96,11 +96,6 @@ void simd_fpu_fault(uint32_t cs, uint32_t eip, uint32_t eflags) {
   for (;;);
 }
 
-void set_int_vect(int intno, I86_IRQ_HANDLER handler) {
-  install_ir(intno, IDT_DESC_PRESENT | IDT_DESC_BIT32,
-      0x8, handler);
-}
-
 void exceptions_init() {
   set_int_vect(0, (I86_IRQ_HANDLER)divide_by_zero_fault);
   set_int_vect(1, (I86_IRQ_HANDLER)single_step_trap);
