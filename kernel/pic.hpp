@@ -16,12 +16,12 @@
 // ====================== Operation Command Words ======================
 
 // Command word 2 bit masks
-#define PIC_OCW2_MASK_L1        1
-#define PIC_OCW2_MASK_L2        2
-#define PIC_OCW2_MASK_L3        4
-#define PIC_OCW2_MASK_EOI       0x20
-#define PIC_OCW2_MASK_SL        0x40
-#define PIC_OCW2_MASK_ROTATE    0x80
+#define PIC_OCW2_MASK_L1        1         // Interrupt level 1
+#define PIC_OCW2_MASK_L2        2         // Interrupt level 2
+#define PIC_OCW2_MASK_L3        4         // Interrupt level 3
+#define PIC_OCW2_MASK_EOI       0x20      // End of Interrupt mask
+#define PIC_OCW2_MASK_SL        0x40      // Selection
+#define PIC_OCW2_MASK_ROTATE    0x80      // Rotation option
 
 // Command word 3 bit masks
 #define PIC_OCW3_MASK_RIS       1
@@ -32,17 +32,18 @@
 #define PIC_OCW3_MASK_D7        0x80
 
 // ====================== Initialization Command Words ======================
-#define PIC_ICW1_MASK_IC4       1
-#define PIC_ICW1_MASK_SNGL      2
-#define PIC_ICW1_MASK_ADI       4
-#define PIC_ICW1_MASK_LTIM      8
-#define PIC_ICW1_MASK_INIT      0x10
+#define PIC_ICW1_MASK_IC4       1         // If set, PIC will expect Initialization command 4
+#define PIC_ICW1_MASK_SNGL      2         // If = 1, there is only one PIC in the system
+#define PIC_ICW1_MASK_ADI       4         // Ignored by x86 systems
+#define PIC_ICW1_MASK_LTIM      8         // If set, PIC will operate in Level Triggered Mode
+#define PIC_ICW1_MASK_INIT      0x10      // Initialization bit
 
-#define PIC_ICW4_MASK_UPM       1
-#define PIC_ICW4_MASK_AEOI      2
-#define PIC_ICW4_MASK_MS        4
-#define PIC_ICW4_MASK_BUF       8
-#define PIC_ICW4_MASK_SFNM      0x10
+#define PIC_ICW4_MASK_UPM       1         // Has to be set in x86 mode
+#define PIC_ICW4_MASK_AEOI      2         // If set, controlle automatically performs End of
+                                          // Interrupt (EOI) operation on the last interrupt acknowledge pulse
+#define PIC_ICW4_MASK_MS        4         // use buffer master (use onl when buf is set)
+#define PIC_ICW4_MASK_BUF       8         // If set, operate in buffer mode
+#define PIC_ICW4_MASK_SFNM      0x10      // special fully nested mode
 
 #define PIC_ICW1_IC4_EXPECT             1
 #define PIC_ICW1_IC4_NO                 0

@@ -33,17 +33,23 @@ void pic_init(uint8_t base0, uint8_t base1) {
     icw = (icw & ~PIC_ICW1_MASK_INIT) | PIC_ICW1_INIT_YES;
     icw = (icw & ~PIC_ICW1_MASK_IC4) | PIC_ICW1_IC4_EXPECT;
 
+    // ICW1 - init + expect IC4
     pic_send_command(icw, 0);
     pic_send_command(icw, 1);
 
+    // ICW2
+    // sending interrupt vector address to master and slave PICs
     pic_send_data(base0, 0);
     pic_send_data(base1, 1);
 
+    // ICW3
+    // This is the connection between the master and slave PICs
     pic_send_data(4, 0);
     pic_send_data(2, 1);
 
     icw = (icw & ~PIC_ICW4_MASK_UPM) | PIC_ICW4_UPM_86MODE;
 
+    // ICW4 - Enabling x86 mode
     pic_send_data(icw, 0);
     pic_send_data(icw, 1);
 }
