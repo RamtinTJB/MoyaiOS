@@ -103,6 +103,43 @@ void debug_printf(const char* format, ...) {
     va_end(args);
 }
 
+void print_cs() {
+    uint16_t cs;
+    __asm__ volatile ("mov %%cs, %0" : "=r" (cs));
+    // Print the value of CS
+    debug_printf("CS register: %x\n", cs);
+}
+
+void print_eip() {
+    uint32_t eip;
+
+    __asm__ volatile (
+        "call 1f\n"        // Call the next instruction
+        "1:\n"             // Label to return to
+        "pop %0\n"         // Pop the return address (EIP) into the variable
+        : "=r" (eip)       // Output: store EIP in the variable
+        :
+        :                  // No clobbers
+    );
+
+    debug_printf("EIP: %x\n", eip);
+}
+
+void print_stack(uint32_t n) {
+  uint32_t *stack_ptr;
+
+  __asm__ volatile (
+      "mov %%esp, %0"
+      : "=r" (stack_ptr)
+      );
+  debug_printf("Stack contents (top %d integers):\n", n);
+
+  for (uint32_t i = 0; i < n; ++i) {
+    debug_printf("  [%d]: %x\n", i, *(stack_ptr+i));
+  }
+}
+
 void infinite_loop() {
     asm volatile ("1: hlt; jmp 1b");
 }
+
