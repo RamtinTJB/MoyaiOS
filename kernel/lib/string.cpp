@@ -7,21 +7,14 @@ size_t strlen(const char* str) {
 }
 
 void reverse(char* str) {
-  for (int j = 0; j < strlen(str)/2; ++j) {
-    if (str == 0) return;
-    if (*str == 0) return;
+  if (!str) return;
+  size_t len = strlen(str);
+  if (len <= 1) return;
 
-    char* end = str + strlen(str) - 1;
-    char tmp;
-
-    while (end > str) {
-      tmp = *str;
-      *str = *end;
-      *end = tmp;
-
-      str++;
-      end--;
-    }
+  for (size_t i = 0; i < len / 2; ++i) {
+    char tmp = str[i];
+    str[i] = str[len - i - 1];
+    str[len - i - 1] = tmp;
   }
 }
 
