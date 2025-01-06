@@ -43,7 +43,7 @@ I86_IRQ_HANDLER get_int_vect(int intno) {
 }
 
 void interrupt_done(uint8_t intno) {
-  if (intno >= 16)
+  if (intno > 16)
     return;
 
   if (intno >= 8)
