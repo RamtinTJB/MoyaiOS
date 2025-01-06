@@ -6,9 +6,26 @@ void kernel_panic(const char* msg) {
   debug_printf("*[Kernel Panic]* : %s\n", msg);
 }
 
-void divide_by_zero_fault(uint32_t cs, uint32_t eip, uint32_t eflags) {
-  kernel_panic("Divide by 0");
-  for (;;);
+/* void __attribute__((cdecl)) divide_by_zero_fault(uint32_t cs, uint32_t eip, uint32_t eflags) { */
+void __attribute__((cdecl)) divide_by_zero_fault() {
+  __asm__ volatile ("add $12, esp");
+  /* __asm__ volatile ("sub $12, %%esp" ::: "esp"); */
+  /* uint32_t *stack_ptr; */
+  /* __asm__ volatile ("mov %%esp, %0" : "=r" (stack_ptr)); */
+  /* uint32_t eip1 = stack_ptr[0]; */
+  /* uint32_t cs1 = stack_ptr[1]; */
+  /* uint32_t eflags1 = stack_ptr[2]; */
+  /* debug_printf("CS: %x, EIP: %x, EFLAGS: %x\n", cs1, eip1, eflags1); */
+  __asm__("pusha");
+
+  /* print_stack(20); */
+  //kernel_panic("Divide by 0");
+  //debug_printf("CS: %x, EIP: %x, EFLAGS: %x\n", cs, eip, eflags);
+  /* print_stack(6); */
+  /* for (;;); */
+
+  __asm__("popa");
+  __asm__("iret");
 }
 
 void single_step_trap(uint32_t cs, uint32_t eip, uint32_t eflags) {
@@ -115,6 +132,8 @@ void exceptions_init() {
   set_int_vect(17, (I86_IRQ_HANDLER)alignment_check_fault);
   set_int_vect(18, (I86_IRQ_HANDLER)machind_check_report);
   set_int_vect(19, (I86_IRQ_HANDLER)simd_fpu_fault);
+
+  print_function_address((void*)divide_by_zero_fault);
 }
 
 void trigger_divide_by_zero() {

@@ -9,6 +9,8 @@
 #include <string.hpp>
 
 extern "C" void kernel_main() {
+  gdt_init();
+
   asm volatile (
         "mov $0x10, %%ax\n"  // DATA_DESC (GDT index 0x10)
         "mov %%ax, %%ds\n"
@@ -22,13 +24,22 @@ extern "C" void kernel_main() {
 
     );
 
-  gdt_init();
+  __asm__ volatile (
+        "ljmp $0x08, $1f\n"  // Far jump to the correct GDT code segment (0x08)
+        "1:\n"
+    );
+  debug_printf("%x\n", 123098109);
+
+  print_cs();
+  /* gdt_init(); */
   idt_init(0x8);
   exceptions_init();
-  pic_init(0x20, 0x28);
-  pit_init();
+  print_cs();
+  /* for(;;); */
+  //pic_init(0x20, 0x28);
+  //pit_init();
 
-  enable();
+  //enable();
 
   terminal_init();
   const char* str = "Moyai OS";
@@ -36,7 +47,8 @@ extern "C" void kernel_main() {
   debug_write_string("Debug console from the C++ Kernel!\n");
   debug_printf("Welcome to %s, %d, %x\n", "Moyai OS", 100, str);
 
-  //trigger_divide_by_zero();
+  print_eip();
+  trigger_divide_by_zero();
 
   //gen_int(0x11);
 
@@ -47,6 +59,7 @@ extern "C" void kernel_main() {
     for (int i = 0; i < 1e7; ++i) {
       asm volatile ("nop");
     }
+    //enable();
     //gen_int(0x11);
   }
 

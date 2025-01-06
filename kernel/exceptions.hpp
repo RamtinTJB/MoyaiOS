@@ -9,7 +9,8 @@ void kernel_panic(const char* msg);
 * Triggered when a division by zero is attempted or the 
 * result of the division is too large to be represented.
 */
-void divide_by_zero_fault(uint32_t cs, uint32_t eip, uint32_t eflags);
+//void __attribute__((cdecl)) divide_by_zero_fault(uint32_t cs, uint32_t eip, uint32_t eflags);
+void __attribute__((cdecl)) divide_by_zero_fault();
 
 /*
 * Triggered during single-stepping for debugging purposes.
