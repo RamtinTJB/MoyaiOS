@@ -143,3 +143,7 @@ void infinite_loop() {
     asm volatile ("1: hlt; jmp 1b");
 }
 
+void print_function_address(void* func) {
+  debug_printf("Function address: %x\n", func);
+}
+

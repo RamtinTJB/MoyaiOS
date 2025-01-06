@@ -12,6 +12,7 @@ void debug_printf(const char* format, ...);
 void print_cs();
 void print_eip();
 void print_stack(uint32_t n);
+void print_function_address(void*);
 
 void infinite_loop();
 
